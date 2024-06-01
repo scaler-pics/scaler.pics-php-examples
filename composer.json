@@ -1,0 +1,5 @@
+{
+    "require": {
+        "scaler/scaler": "^1.0"
+    }
+}
