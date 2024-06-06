@@ -11,7 +11,6 @@ Perform the tests from location with good upload and downnload speeds,
 */
 
 $apiKey = $argv[1] ?? '';
-
 $scaler = new Scaler($apiKey, './results/access-token.txt');
 
 $options = [

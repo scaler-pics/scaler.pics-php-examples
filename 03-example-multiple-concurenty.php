@@ -1,71 +1,69 @@
 <?php
+
 require 'vendor/autoload.php';
-require 'src/Scaler.php';
+require '../scaler.pics-php/src/Scaler.php';
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Pool;
 use Scaler\Scaler;
 
 $apiKey = $argv[1] ?? '';
+$scaler = new Scaler($apiKey, './results/access-token.txt');
 
-$scaler = new Scaler($apiKey, './test-data/access-token.txt');
-
-$optionsList = [
-	[
-		'input' => [
-			'remoteUrl' => 'https://example.com/image1.jpg',
-		],
-		'output' => [
-			'fit' => 'cover',
-			'type' => 'jpeg',
-			'quality' => 80,
-			'imageDelivery' => [
-				'saveToLocalPath' => '/path/to/save/image1.jpg',
-			],
-		],
-	],
-	[
-		'input' => [
-			'remoteUrl' => 'https://example.com/image2.jpg',
-		],
-		'output' => [
-			'fit' => 'contain',
-			'type' => 'png',
-			'quality' => 90,
-			'imageDelivery' => [
-				'saveToLocalPath' => '/path/to/save/image2.png',
-			],
-		],
-	],
-];
-
-$transformImage = function ($options) use ($scaler) {
-	try {
-		return $scaler->transform($options);
-	} catch (Exception $e) {
-		return 'Error: ' . $e->getMessage();
-	}
-};
+$count = 2;
 
 $client = new Client();
-$requests = function ($optionsList) use ($transformImage) {
-	foreach ($optionsList as $options) {
-		yield function () use ($transformImage, $options) {
-			return $transformImage($options);
+
+$requests = function ($count, $scaler) {
+	for ($i = 0; $i < $count; $i++) {
+		yield function () use ($scaler, $i) {
+			return $scaler->transformAsync([
+				'input' => ['localPath' => "images/test-" . ($i + 1) . ".heic"],
+				'output' => [
+					[
+						'type' => 'jpeg',
+						'fit' => ['width' => 1280, 'height' => 1280],
+						'quality' => 0.8,
+						'imageDelivery' => [
+							'saveToLocalPath' => "results/output-{$i}-1280.jpeg",
+						],
+					],
+					[
+						'type' => 'jpeg',
+						'fit' => ['width' => 1024, 'height' => 1024],
+						'quality' => 0.8,
+						'imageDelivery' => [
+							'saveToLocalPath' => "results/output-{$i}-1024.jpeg",
+						],
+					],
+					[
+						'type' => 'jpeg',
+						'fit' => ['width' => 512, 'height' => 512],
+						'quality' => 0.8,
+						'imageDelivery' => [
+							'saveToLocalPath' => "results/output-{$i}-512.jpeg",
+						],
+					],
+				],
+			]);
 		};
 	}
 };
 
-$pool = new Pool($client, $requests($optionsList), [
-	'concurrency' => 5,
+$timeStart = microtime(true);
+
+$pool = new Pool($client, $requests($count, $scaler), [
+	'concurrency' => $count,
 	'fulfilled' => function ($response, $index) {
-		echo "Image {$index} transformed successfully\n";
-		print_r($response);
+		echo "response for index {$index}: " . json_encode($response, JSON_PRETTY_PRINT) . PHP_EOL;
 	},
 	'rejected' => function ($reason, $index) {
-		echo "Image {$index} failed to transform: {$reason}\n";
+		echo "error for index {$index}: " . json_encode($reason, JSON_PRETTY_PRINT) . PHP_EOL;
 	},
 ]);
 
 $promise = $pool->promise();
 $promise->wait();
+
+$totalTime = microtime(true) - $timeStart;
+echo "Total time for {$count} concurrent transforms: {$totalTime}" . PHP_EOL;
