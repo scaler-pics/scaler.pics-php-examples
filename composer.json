@@ -1,5 +1,5 @@
 {
     "require": {
-        "scaler/scaler": "^1.0"
+        "guzzlehttp/guzzle": "^7.8"
     }
 }
