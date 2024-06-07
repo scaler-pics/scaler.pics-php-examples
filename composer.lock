@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "84739704e55b10d7924a36b205f60895",
+    "content-hash": "7db187e14eb7a5715e852b1ecfb0eec9",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -534,6 +534,62 @@
                 "source": "https://github.com/ralouphie/getallheaders/tree/develop"
             },
             "time": "2019-03-08T08:55:37+00:00"
+        },
+        {
+            "name": "scaler/scaler",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/scaler-pics/scaler.pics-php.git",
+                "reference": "198acbbc062852e1d22a0966d81a62fa4bfd460e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/scaler-pics/scaler.pics-php/zipball/198acbbc062852e1d22a0966d81a62fa4bfd460e",
+                "reference": "198acbbc062852e1d22a0966d81a62fa4bfd460e",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.0",
+                "php": ">=7.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Scaler\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Scaler.pics API helper library for efficient transforming photos and images",
+            "homepage": "https://scaler.pics",
+            "keywords": [
+                "BMP",
+                "Webp",
+                "avif",
+                "compress",
+                "convert",
+                "crop",
+                "gif",
+                "heic",
+                "heif",
+                "image",
+                "jpeg",
+                "optimize",
+                "photo",
+                "png",
+                "resize",
+                "scale",
+                "tiff",
+                "transform"
+            ],
+            "support": {
+                "issues": "https://github.com/scaler-pics/scaler.pics-php/issues",
+                "source": "https://github.com/scaler-pics/scaler.pics-php/tree/v1.0.0"
+            },
+            "time": "2024-06-01T05:41:21+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
